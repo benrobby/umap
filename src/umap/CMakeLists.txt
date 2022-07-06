@@ -7,7 +7,6 @@
 project(umap_libraries)
 
 set(umapheaders
-      config.h
       Buffer.hpp
       EvictManager.hpp
       EvictWorkers.hpp
@@ -40,6 +39,7 @@ set(umapsrc
     store/SparseStore.cpp
     util/Exception.cpp
     util/Logger.cpp
+    config.h
     ${umapheaders})
 
 find_package(Threads REQUIRED)
@@ -55,8 +55,13 @@ install(TARGETS umap umap-static
         ARCHIVE DESTINATION lib
         RUNTIME DESTINATION bin )
 
-install(FILES umap.h DESTINATION include/umap)
+foreach( file ${umapheaders})
+    get_filename_component(dir ${file} DIRECTORY)
+    install(FILES ${file} DESTINATION include/umap/${dir})
+endforeach( file ${umapheaders})
 
-install(FILES store/Store.hpp DESTINATION include/umap/store )
+install(FILES ${PROJECT_BINARY_DIR}/config.h DESTINATION include/umap)
 
-install(FILES store/SparseStore.h DESTINATION include/umap/store)
+# install(FILES store/Store.hpp DESTINATION include/umap/store )
+
+# install(FILES store/SparseStore.h DESTINATION include/umap/store)
